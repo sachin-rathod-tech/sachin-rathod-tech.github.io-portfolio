@@ -84,8 +84,40 @@ section { scroll-margin-top:20px; }
  main { padding:28px 18px; }
  .hero-actions { justify-content:center; }
 }
+
+.snake-wrap{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;text-align:center}
+.snake-wrap p{color:var(--muted);font-size:.95rem;margin:.25rem 0 12px}
+.sbar{display:flex;justify-content:center;gap:22px;font-weight:700;margin-bottom:10px;flex-wrap:wrap}
+.sbar span b{color:var(--accent)}
+#snake{width:100%;max-width:360px;height:auto;aspect-ratio:1;border:2px solid var(--line);border-radius:12px;touch-action:none;display:block;margin:0 auto;outline:none}
+#snake:focus-visible{border-color:var(--accent)}
+.sbtns{display:flex;justify-content:center;gap:10px;margin-top:12px}
+.sbtn{font:inherit;font-weight:700;padding:8px 16px;border-radius:9px;border:1px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer}
+.sbtn.alt{background:transparent;color:var(--accent)}
+.smsg{min-height:1.5em;margin-top:10px;font-weight:600}
+.dpad{display:grid;grid-template-columns:repeat(3,54px);grid-template-rows:repeat(2,54px);gap:6px;justify-content:center;margin-top:12px}
+.dpad button{font:inherit;font-size:1.2rem;border-radius:12px;border:1px solid var(--line);background:var(--chip);color:var(--text);cursor:pointer}
+.dpad .u{grid-column:2;grid-row:1}.dpad .l{grid-column:1;grid-row:2}.dpad .d{grid-column:2;grid-row:2}.dpad .r{grid-column:3;grid-row:2}
+@media (hover:hover) and (pointer:fine){.dpad{display:none}}
+
+.play-btn{background:#e8590c;color:#fff;font-weight:800;letter-spacing:.06em;text-transform:uppercase;font-size:.95rem;padding:12px;margin:0 0 16px;box-shadow:0 4px 14px rgba(232,89,12,.45)}
+.play-btn:hover{background:#cf4e0a}
+.gtabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.gtab{font:inherit;font-weight:700;padding:9px 14px;border-radius:999px;border:1px solid #e8590c;background:transparent;color:#e8590c;cursor:pointer}
+.gtab.on{background:#e8590c;color:#fff}
+.qtext{font-size:1.1rem;font-weight:700;margin:6px 0 14px;text-align:left}
+.qopts{display:grid;gap:8px}
+.qopt{font:inherit;text-align:left;padding:10px 14px;border-radius:10px;border:1px solid var(--line);background:var(--chip);color:var(--text);cursor:pointer}
+.qopt:hover{border-color:#e8590c}
+.qopt.ok{background:#16a34a;border-color:#16a34a;color:#fff}
+.qopt.bad{background:#dc2626;border-color:#dc2626;color:#fff}
+.qexp{min-height:1.5em;margin-top:12px;text-align:left;font-weight:600}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(105px,1fr));gap:10px;margin:6px 0 4px}
+.pcard{font:inherit;font-weight:700;font-size:.85rem;min-height:70px;padding:8px;border-radius:12px;border:2px solid #e8590c;background:#e8590c;color:#fff;cursor:pointer}
+.pcard.up{background:var(--chip);color:var(--text)}
+.pcard.done{background:#16a34a;border-color:#16a34a;color:#fff;cursor:default}
 @media print {
- aside nav,.side-btn,.hero-actions { display:none !important; }
+ aside nav,.side-btn,.hero-actions,#play { display:none !important; }
  .layout { display:block; }
  aside { position:static; height:auto; background:#0f2a47 !important; }
  main { max-width:none; padding:20px; }
@@ -101,9 +133,10 @@ section { scroll-margin-top:20px; }
 <h1>Sachin Rathod</h1>
 <div class="role-line">AWS Cloud &amp; DevOps Engineer</div>
 <div class="loc">Pune, Maharashtra, India</div>
+<a class="side-btn play-btn" href="#play">Play Game</a>
 <nav aria-label="Main navigation">
 <a href="#about">About</a><a href="#skills">Skills</a><a href="#projects">Projects</a>
-<a href="#experience">Experience</a><a href="#education">Education</a><a href="#contact">Contact</a>
+<a href="#experience">Experience</a><a href="#education">Education</a><a href="#contact">Contact</a><a href="#play">Play</a>
 </nav>
 <a class="side-btn" href="Sachin_Rathod_Resume.pdf" download="Sachin_Rathod_Resume.pdf">Download Resume</a>
 <a class="side-btn alt" href="mailto:sachin-rathod@outlook.com?subject=DevOps%20Opportunity">Email me</a>
@@ -262,11 +295,253 @@ section { scroll-margin-top:20px; }
 </div>
 </section>
 
+<section id="play">
+<h2><span>07</span>Play Games</h2>
+<div class="gtabs" role="tablist" aria-label="Choose a game">
+<button class="gtab on" type="button" role="tab" aria-selected="true" data-t="snake">Snake</button>
+<button class="gtab" type="button" role="tab" aria-selected="false" data-t="quiz">DevOps &amp; Cloud Quiz</button>
+<button class="gtab" type="button" role="tab" aria-selected="false" data-t="puzzle">Tool Match Puzzle</button>
+</div>
+
+<div class="snake-wrap gpanel" id="gp-snake">
+<p>Just for fun. Collect the orange deploys without hitting the walls or yourself. Use arrow keys or WASD, or swipe on your phone.</p>
+<div class="sbar"><span>Deploys: <b id="sscore">0</b></span><span>Best: <b id="sbest">0</b></span></div>
+<canvas id="snake" tabindex="0" aria-label="Snake game"></canvas>
+<div class="sbtns"><button class="sbtn" id="splay" type="button">Play</button><button class="sbtn alt" id="srestart" type="button">Restart</button></div>
+<div class="dpad" aria-label="Touch controls"><button class="u" data-d="u" aria-label="Up" type="button">&#9650;</button><button class="l" data-d="l" aria-label="Left" type="button">&#9664;</button><button class="d" data-d="d" aria-label="Down" type="button">&#9660;</button><button class="r" data-d="r" aria-label="Right" type="button">&#9654;</button></div>
+<div class="smsg" id="smsg" role="status">Press Play to start.</div>
+</div>
+
+<div class="snake-wrap gpanel" id="gp-quiz" hidden>
+<p>10 random questions on DevOps and AWS cloud. Pick the right answer.</p>
+<div class="sbar"><span id="qprog">Question 1 of 10</span><span>Score: <b id="qscore">0</b></span></div>
+<div class="qtext" id="qtext"></div>
+<div class="qopts" id="qopts"></div>
+<div class="qexp" id="qexp" role="status"></div>
+<div class="sbtns"><button class="sbtn" id="qnext" type="button" hidden>Next</button></div>
+</div>
+
+<div class="snake-wrap gpanel" id="gp-puzzle" hidden>
+<p>Match each DevOps tool with what it does. Tap two cards to flip them.</p>
+<div class="sbar"><span>Moves: <b id="pmoves">0</b></span><span>Matched: <b id="pmatch">0</b> / 6</span></div>
+<div class="pgrid" id="pgrid"></div>
+<div class="smsg" id="pmsg" role="status">Find the first pair.</div>
+<div class="sbtns"><button class="sbtn alt" id="prestart" type="button">Shuffle and restart</button></div>
+</div>
+</section>
+
 <footer>© <span id="year"></span> Sachin Rathod · AWS Cloud &amp; DevOps Engineer</footer>
 </main>
 </div>
 <script>
 document.getElementById("year").textContent = new Date().getFullYear();
+(function(){
+  var cv = document.getElementById("snake"), ctx = cv.getContext("2d");
+  var N = 20, C = 18; cv.width = cv.height = N * C;
+  var scoreEl = document.getElementById("sscore"), bestEl = document.getElementById("sbest");
+  var msg = document.getElementById("smsg"), playBtn = document.getElementById("splay");
+  var snake, dir, queue, food, score = 0, best = 0, timer = null, running = false, over = false;
+  function css(n){ return getComputedStyle(document.documentElement).getPropertyValue(n).trim() || "#0d9488"; }
+  function reset(){
+    snake = [{x:8,y:10},{x:7,y:10},{x:6,y:10}]; dir = {x:1,y:0}; queue = []; score = 0; over = false;
+    placeFood(); stats(); draw();
+  }
+  function placeFood(){
+    do { food = {x: Math.floor(Math.random()*N), y: Math.floor(Math.random()*N)}; }
+    while (snake.some(function(s){ return s.x === food.x && s.y === food.y; }));
+  }
+  function stats(){ scoreEl.textContent = score; bestEl.textContent = best; }
+  function setDir(x, y){
+    var last = queue.length ? queue[queue.length-1] : dir;
+    if ((x === -last.x && y === -last.y) || (x === last.x && y === last.y)) return;
+    if (queue.length < 2) queue.push({x:x, y:y});
+  }
+  function schedule(){
+    clearTimeout(timer);
+    timer = setTimeout(step, Math.max(150, 260 - Math.floor(score/4)*6));
+  }
+  function step(){
+    if (queue.length) dir = queue.shift();
+    var head = {x: snake[0].x + dir.x, y: snake[0].y + dir.y};
+    var eat = head.x === food.x && head.y === food.y;
+    var body = eat ? snake : snake.slice(0, -1);
+    if (head.x < 0 || head.y < 0 || head.x >= N || head.y >= N ||
+        body.some(function(s){ return s.x === head.x && s.y === head.y; })) { end(); return; }
+    snake.unshift(head);
+    if (eat){ score++; placeFood(); } else { snake.pop(); }
+    stats(); draw(); schedule();
+  }
+  function start(){
+    if (over) reset();
+    if (running) return;
+    running = true; playBtn.textContent = "Pause"; msg.textContent = "Go! Collect the orange deploys.";
+    schedule();
+  }
+  function pause(){
+    running = false; clearTimeout(timer); playBtn.textContent = "Resume"; msg.textContent = "Paused."; draw();
+  }
+  function end(){
+    running = false; over = true; clearTimeout(timer);
+    if (score > best) best = score;
+    stats(); playBtn.textContent = "Play again";
+    msg.textContent = "Game over. You shipped " + score + (score === 1 ? " deploy." : " deploys.");
+    draw();
+  }
+  function draw(){
+    var bg = css("--card"), line = css("--line"), acc = css("--accent");
+    ctx.fillStyle = bg; ctx.fillRect(0, 0, cv.width, cv.height);
+    ctx.strokeStyle = line; ctx.lineWidth = 1;
+    for (var i = 1; i < N; i++){
+      ctx.beginPath(); ctx.moveTo(i*C, 0); ctx.lineTo(i*C, cv.height); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0, i*C); ctx.lineTo(cv.width, i*C); ctx.stroke();
+    }
+    ctx.fillStyle = "#e8590c"; ctx.beginPath();
+    ctx.arc(food.x*C + C/2, food.y*C + C/2, C/2 - 2, 0, Math.PI*2); ctx.fill();
+    snake.forEach(function(s, k){
+      ctx.fillStyle = k === 0 ? "#0f766e" : acc;
+      ctx.fillRect(s.x*C + 1, s.y*C + 1, C - 2, C - 2);
+    });
+    if (!running){
+      ctx.fillStyle = "rgba(0,0,0,.45)"; ctx.fillRect(0, 0, cv.width, cv.height);
+      ctx.fillStyle = "#fff"; ctx.font = "bold 20px system-ui, sans-serif"; ctx.textAlign = "center";
+      ctx.fillText(over ? "Game over" : "Press Play", cv.width/2, cv.height/2);
+    }
+  }
+  function press(x, y){
+    if (!running && !over) start();
+    else if (!running && over) { start(); }
+    setDir(x, y);
+  }
+  document.addEventListener("keydown", function(e){
+    var k = e.key, map = {ArrowUp:[0,-1], w:[0,-1], W:[0,-1], ArrowDown:[0,1], s:[0,1], S:[0,1], ArrowLeft:[-1,0], a:[-1,0], A:[-1,0], ArrowRight:[1,0], d:[1,0], D:[1,0]};
+    if (k === " " && document.activeElement === cv){ e.preventDefault(); running ? pause() : start(); return; }
+    if (!running || !map[k]) return;
+    e.preventDefault(); setDir(map[k][0], map[k][1]);
+  });
+  var tx = 0, ty = 0;
+  cv.addEventListener("touchstart", function(e){ tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, {passive:true});
+  cv.addEventListener("touchmove", function(e){ if (running) e.preventDefault(); }, {passive:false});
+  cv.addEventListener("touchend", function(e){
+    var dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty;
+    if (Math.max(Math.abs(dx), Math.abs(dy)) < 20) return;
+    if (Math.abs(dx) > Math.abs(dy)) press(dx > 0 ? 1 : -1, 0); else press(0, dy > 0 ? 1 : -1);
+  }, {passive:true});
+  Array.prototype.forEach.call(document.querySelectorAll(".dpad button"), function(b){
+    b.addEventListener("click", function(){
+      var d = b.getAttribute("data-d");
+      press(d === "l" ? -1 : d === "r" ? 1 : 0, d === "u" ? -1 : d === "d" ? 1 : 0);
+    });
+  });
+  playBtn.addEventListener("click", function(){ running ? pause() : start(); });
+  document.getElementById("srestart").addEventListener("click", function(){
+    running = false; clearTimeout(timer); reset(); playBtn.textContent = "Play"; msg.textContent = "Press Play to start.";
+  });
+  document.addEventListener("visibilitychange", function(){ if (document.hidden && running) pause(); });
+  document.addEventListener("game-switch", function(){ if (running) pause(); });
+  if ("IntersectionObserver" in window){
+    new IntersectionObserver(function(en){ if (!en[0].isIntersecting && running) pause(); }, {threshold:0.2}).observe(cv);
+  }
+  reset();
+})();
+</script>
+<script>
+(function(){
+  function $(id){ return document.getElementById(id); }
+  function shuffle(a){ a = a.slice(); for (var i = a.length - 1; i > 0; i--){ var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  /* tabs */
+  var tabs = document.querySelectorAll(".gtab");
+  Array.prototype.forEach.call(tabs, function(t){
+    t.addEventListener("click", function(){
+      document.dispatchEvent(new Event("game-switch"));
+      Array.prototype.forEach.call(tabs, function(x){ var on = x === t; x.classList.toggle("on", on); x.setAttribute("aria-selected", on ? "true" : "false"); $("gp-" + x.getAttribute("data-t")).hidden = !on; });
+    });
+  });
+
+  /* quiz */
+  var Q = [
+    {q:"Which AWS service stores files as objects?", o:["S3","EC2","EBS","RDS"], a:0, e:"S3 is object storage. EBS is a disk for one EC2 instance."},
+    {q:"Which tool runs pipelines defined in a Jenkinsfile?", o:["Jenkins","Terraform","Prometheus","Helm"], a:0, e:"Jenkins reads the Jenkinsfile and runs the pipeline stages."},
+    {q:"What does a Kubernetes Deployment manage?", o:["ReplicaSets and pods","Only nodes","DNS records","Docker registries"], a:0, e:"A Deployment manages ReplicaSets, and a ReplicaSet keeps the right number of pods running."},
+    {q:"Which Terraform command shows changes before they are applied?", o:["terraform plan","terraform init","terraform destroy","terraform fmt"], a:0, e:"terraform plan previews what will be created, changed, or deleted."},
+    {q:"What does a NAT Gateway do?", o:["Lets private instances reach the internet without being reachable from it","Balances traffic across servers","Stores DNS records","Scans images for vulnerabilities"], a:0, e:"Private subnets use a NAT Gateway for outbound internet access only."},
+    {q:"Which tool scans Docker images for vulnerabilities?", o:["Trivy","Maven","Grafana","ArgoCD"], a:0, e:"Trivy scans images for known CVEs. SonarQube checks code quality."},
+    {q:"In GitOps, what is the source of truth?", o:["The Git repository","The running server","A spreadsheet","The Jenkins console"], a:0, e:"GitOps tools like ArgoCD make the cluster match what is in Git."},
+    {q:"Which AWS service is a content delivery network (CDN)?", o:["CloudFront","Route 53","Lambda","IAM"], a:0, e:"CloudFront caches content at edge locations close to users."},
+    {q:"Security Groups in AWS are...", o:["Stateful","Stateless","Only for subnets","Only for S3"], a:0, e:"Security Groups are stateful and attached to instances. NACLs are stateless and attached to subnets."},
+    {q:"Which tool collects metrics that Grafana can show in dashboards?", o:["Prometheus","Docker Hub","Trivy","Maven"], a:0, e:"Prometheus collects and stores metrics. Grafana visualizes them."},
+    {q:"Which Linux command shows live CPU and memory use by process?", o:["top","ls","cat","chmod"], a:0, e:"top updates in real time. ps aux gives a snapshot."},
+    {q:"Which Dockerfile instruction sets the default command when a container starts?", o:["CMD","COPY","FROM","EXPOSE"], a:0, e:"CMD defines the default command that runs in the container."},
+    {q:"Which AWS service runs your code without managing servers?", o:["Lambda","EC2","VPC","EBS"], a:0, e:"Lambda runs functions on events and you pay only while they run."},
+    {q:"What is ArgoCD?", o:["A GitOps tool that syncs Git to Kubernetes","A code editor","A database","A load balancer"], a:0, e:"ArgoCD watches a Git repo and syncs the manifests to the cluster."},
+    {q:"Which kubectl command lists pods?", o:["kubectl get pods","kubectl make pods","kubectl show nodes only","kubectl pod list --all-pods-now"], a:0, e:"kubectl get pods lists the pods in the current namespace."},
+    {q:"What does a SonarQube quality gate do?", o:["Fails the build when code does not meet the rules","Builds the Docker image","Creates a VPC","Sends emails"], a:0, e:"If the quality gate fails, the pipeline can stop before the image is built."},
+    {q:"An Application Load Balancer works at which layer?", o:["Layer 7 (HTTP/HTTPS)","Layer 1 (cables)","Layer 4 only (TCP)","Layer 2 (MAC)"], a:0, e:"ALB understands HTTP and HTTPS and can route by path or host. NLB works at layer 4."},
+    {q:"What does the Horizontal Pod Autoscaler (HPA) do?", o:["Changes the number of pods based on metrics like CPU","Changes the size of a node","Deletes old images","Creates a VPC"], a:0, e:"HPA adds or removes pods automatically. It needs metrics-server."},
+    {q:"Why use Transit Gateway instead of many VPC peering links?", o:["It is a central hub that connects many VPCs","It encrypts S3 files","It runs containers","It replaces IAM"], a:0, e:"Each VPC attaches once to the hub, instead of one peering link per pair."},
+    {q:"What is the Terraform state file used for?", o:["To track the resources Terraform manages","To store passwords for users","To run Docker containers","To monitor CPU"], a:0, e:"State maps your code to real resources. Keep it remote and never commit it to Git."}
+  ];
+  var qprog = $("qprog"), qscore = $("qscore"), qtext = $("qtext"), qopts = $("qopts"), qexp = $("qexp"), qnext = $("qnext");
+  var round, qi, sc, locked, done;
+  function newRound(){ round = shuffle(Q).slice(0, 10); qi = 0; sc = 0; done = false; showQ(); }
+  function showQ(){
+    locked = false; var item = round[qi];
+    qprog.textContent = "Question " + (qi + 1) + " of " + round.length; qscore.textContent = sc;
+    qtext.textContent = item.q; qexp.textContent = ""; qnext.hidden = true; qopts.innerHTML = "";
+    shuffle(item.o).forEach(function(text){
+      var b = document.createElement("button"); b.type = "button"; b.className = "qopt"; b.textContent = text;
+      b.addEventListener("click", function(){ answer(b, text, item); });
+      qopts.appendChild(b);
+    });
+  }
+  function answer(b, text, item){
+    if (locked) return; locked = true;
+    var right = item.o[item.a], ok = text === right;
+    Array.prototype.forEach.call(qopts.children, function(x){ if (x.textContent === right) x.classList.add("ok"); });
+    if (!ok) b.classList.add("bad"); else sc++;
+    qscore.textContent = sc;
+    qexp.textContent = (ok ? "Correct. " : "Not quite. ") + item.e;
+    qnext.textContent = qi === round.length - 1 ? "See result" : "Next"; qnext.hidden = false;
+  }
+  qnext.addEventListener("click", function(){
+    if (done){ newRound(); return; }
+    if (qi === round.length - 1){
+      done = true; qopts.innerHTML = ""; qtext.textContent = "You scored " + sc + " out of " + round.length + ".";
+      qexp.textContent = sc >= 9 ? "Excellent. You are interview ready!" : sc >= 6 ? "Good job. A little more practice and you will ace it." : "Keep learning. Try again!";
+      qnext.textContent = "Play again";
+    } else { qi++; showQ(); }
+  });
+  newRound();
+
+  /* puzzle: tool match */
+  var pairs = [["Jenkins","CI/CD server"],["Docker","Containers"],["Kubernetes","Orchestration"],["Terraform","Infrastructure as Code"],["Prometheus","Metrics"],["Grafana","Dashboards"]];
+  var pgrid = $("pgrid"), pmoves = $("pmoves"), pmatch = $("pmatch"), pmsg = $("pmsg");
+  var first, plock, moves, matched;
+  function pStart(){
+    first = null; plock = false; moves = 0; matched = 0; pmoves.textContent = 0; pmatch.textContent = 0; pmsg.textContent = "Find the first pair."; pgrid.innerHTML = "";
+    var cards = []; pairs.forEach(function(p, k){ cards.push({id:k, t:p[0]}); cards.push({id:k, t:p[1]}); });
+    shuffle(cards).forEach(function(c){
+      var b = document.createElement("button"); b.type = "button"; b.className = "pcard"; b.textContent = "?";
+      b.addEventListener("click", function(){ flip(b, c); });
+      pgrid.appendChild(b);
+    });
+  }
+  function flip(b, c){
+    if (plock || b.classList.contains("up") || b.classList.contains("done")) return;
+    b.classList.add("up"); b.textContent = c.t;
+    if (!first){ first = {b:b, c:c}; return; }
+    moves++; pmoves.textContent = moves;
+    if (first.c.id === c.id){
+      first.b.classList.remove("up"); b.classList.remove("up"); first.b.classList.add("done"); b.classList.add("done");
+      matched++; pmatch.textContent = matched; first = null;
+      pmsg.textContent = matched === pairs.length ? "All matched in " + moves + " moves. Great memory!" : "Match! Keep going.";
+    } else {
+      var a = first.b; first = null; plock = true; pmsg.textContent = "Not a match. Try again.";
+      setTimeout(function(){ a.classList.remove("up"); a.textContent = "?"; b.classList.remove("up"); b.textContent = "?"; plock = false; }, 800);
+    }
+  }
+  $("prestart").addEventListener("click", pStart);
+  pStart();
+})();
 </script>
 </body>
 </html>
